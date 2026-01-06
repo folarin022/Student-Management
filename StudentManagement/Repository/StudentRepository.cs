@@ -1,16 +1,24 @@
-﻿using StudentManagement.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentManagement.Context;
 using StudentManagement.Data;
 using StudentManagement.Dto.StudentModel;
+using StudentManagement.Models;
 using StudentManagement.Repository.Interface;
-using System.Threading;
 
 namespace StudentManagement.Repository
 {
-    public class StudentRepository(ApplicationDbContext dbContext) : IStudentRepository
+    public class StudentRepository : IStudentRepository
     {
-        public async Task<bool> AddStudent(AddStudentDto dto)
+        private readonly ApplicationDbContext _dbContext;
+
+        public StudentRepository(ApplicationDbContext dbContext)
         {
-            var students = new Student
+            _dbContext = dbContext;
+        }
+
+        public async Task<bool> AddStudent(AddStudentDto dto, CancellationToken cancellationToken)
+        {
+            var student = new Student
             {
                 Id = Guid.NewGuid(),
                 FirstName = dto.FirstName,
@@ -20,37 +28,54 @@ namespace StudentManagement.Repository
                 PhoneNumber = dto.PhoneNumber,
             };
 
-            await dbContext.Students.AddAsync(students);
-            return await dbContext.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> DeleteStudents(Guid Id, CancellationToken cancellationToken)
-        {
-            var students = await dbContext.Student.FindAsync(new object[] { Id }, cancellationToken);
-
-            if (students == null)
-                return false;
-
-            dbContext.Students.Remove(students);
-            await dbContext.SaveChangesAsync(cancellationToken);
-
+            await _dbContext.Students.AddAsync(student, cancellationToken);
+             await _dbContext.SaveChangesAsync(cancellationToken);
             return true;
         }
 
-        public async Task<List<Student>> GetAllStudent(CancellationToken cancellationToken)
+        public async Task<bool> DeleteStudent(Guid id, CancellationToken cancellationToken)
         {
-            return await dbContext.Students.ToListAsync(cancellationToken);
+            var student = await _dbContext.Students
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+            if (student == null)
+                return false;
+
+            _dbContext.Students.Remove(student);
+             await _dbContext.SaveChangesAsync(cancellationToken);
+            return true;
         }
 
-        public async Task<Student> GetStudentsById(Guid Id, CancellationToken cancellationToken)
+        public async Task<List<Student>> GetAllStudents(CancellationToken cancellationToken)
         {
-            return await dbContext.Students.FirstOrDefaultAsync(p => p.Id == Id, cancellationToken);
+            return await _dbContext.Students .ToListAsync(cancellationToken);
+                
+               
         }
 
-        public async Task<bool> UpdateStudents(Student dto, CancellationToken cancellationToken)
+        public async Task<Student?> GetStudentById(Guid id, CancellationToken cancellationToken)
         {
-            dbContext.Students.Update(dto);
-            return await dbContext.SaveChangesAsync(cancellationToken) > 0;
+            return await _dbContext.Students
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        }
+
+        public async Task<bool> UpdateStudent(AddStudentDto dto, CancellationToken cancellationToken)
+        {
+            var student = await _dbContext.Students
+                .FirstOrDefaultAsync(s => s.Id == dto.Id, cancellationToken);
+
+            if (student == null)
+                return false;
+
+            student.FirstName = dto.FirstName;
+            student.LastName = dto.LastName;
+            student.Email = dto.Email;
+            student.Address = dto.Address;
+            student.PhoneNumber = dto.PhoneNumber;
+
+            _dbContext.Students.Update(student);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return true;
         }
     }
 }

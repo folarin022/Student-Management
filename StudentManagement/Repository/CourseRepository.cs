@@ -1,4 +1,5 @@
-﻿using StudentManagement.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentManagement.Context;
 using StudentManagement.Data;
 using StudentManagement.Dto.CourseModel;
 using StudentManagement.Repository.Interface;
@@ -7,7 +8,7 @@ namespace StudentManagement.Repository
 {
     public class CourseRepository(ApplicationDbContext _dbContext) : ICourseRepository
     {
-        public async Task<bool> AddCourse(AddCourseDto request)
+        public async Task<bool> AddCourse(AddCourseDto request, CancellationToken cancellationToken)
         {
             var course = new Course
             {
@@ -15,7 +16,7 @@ namespace StudentManagement.Repository
                 CourseName = request.CourseName,
             };
 
-            await _dbContext.Courses.AddAsync(request);
+            await _dbContext.Courses.AddAsync(course,cancellationToken);
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
@@ -48,8 +49,9 @@ namespace StudentManagement.Repository
             if (course == null)
                 return false;
 
-            course.Name = request.CourseName;
-            return await _dbContext.SaveChangesAsync(cancellationToken) > 0;
+            course.CourseName = request.CourseName;
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return true;
         }
     }
 }

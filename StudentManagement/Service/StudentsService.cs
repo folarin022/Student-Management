@@ -2,6 +2,7 @@
 using StudentManagement.Context;
 using StudentManagement.Data;
 using StudentManagement.Dto;
+using Microsoft.EntityFrameworkCore;
 using StudentManagement.Dto.StudentModel;
 using StudentManagement.Repository.Interface;
 using StudentManagement.Service.Interface;
@@ -53,7 +54,7 @@ namespace StudentManagement.Service
             var response = new BaseResponse<bool>();
             try
             {
-                var isDeleted = await studentRepository.DeleteStudents(Id, cancellationToken);
+                var isDeleted = await studentRepository.DeleteStudent(Id, cancellationToken);
                 if (isDeleted)
                 {
                     response.IsSuccess = false;
@@ -75,9 +76,37 @@ namespace StudentManagement.Service
             return response; 
         }
 
-        public Task<BaseResponse<List<StudentResponseDto>>> GetAllStudent(CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<StudentResponseDto>>> GetAllStudent(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var response= new BaseResponse<List<StudentResponseDto>>();
+
+            try
+            {
+                var student = await dbContext.Students
+                    .Include(e => e.Course)
+                    .ToListAsync(cancellationToken);
+
+                var list = student.Select(e => new StudentResponseDto
+                {
+                    Id = e.Id,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    Gender = e.Gender,
+                    Email = e.Email,
+                    Address = e.Address,
+                    PhoneNumber = e.PhoneNumber,
+                    CourseId = e.CourseId,
+                    Course = e.Course.CourseName,
+                }).ToList();
+            }
+
+            catch (Exception e)
+            {
+                response.IsSuccess = false;
+                response.Data = null;
+                response.Message = "Error fetching student";
+            }
+            return response;
         }
 
         public Task<List<SelectListItem>> GetCourseForDropdown()
