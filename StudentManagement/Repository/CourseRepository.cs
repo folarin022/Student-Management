@@ -33,9 +33,9 @@ namespace StudentManagement.Repository
             return true;
         }
 
-        public async Task<List<Course>> GetAllCourse(CancellationToken cancellationToken)
+        public async Task<List<Course>> GetAllCourse()
         {
-            return await _dbContext.Courses.ToListAsync(cancellationToken);
+            return await _dbContext.Courses.ToListAsync();
         }
 
         public async Task<Course> GetCourseById(Guid Id, CancellationToken cancellationToken)

@@ -75,13 +75,13 @@ namespace StudentManagement.Service
             return response;
         }
 
-        public async Task<BaseResponse<List<CourseResponseDto>>> GetAllCourses(CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<CourseResponseDto>>> GetAllCourses()
         {
             var response = new BaseResponse<List<CourseResponseDto>>();
 
             try
             {
-                var courses = await _courseRepository.GetAllCourse(cancellationToken);
+                var courses = await _courseRepository.GetAllCourse();
                 var courseDtos = courses.Select(MapToResponseDto).ToList();
 
                 response.IsSuccess = true;
