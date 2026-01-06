@@ -16,7 +16,7 @@ namespace StudentManagement.Repository
                 CourseName = request.CourseName,
             };
 
-            await _dbContext.Courses.AddAsync(course,cancellationToken);
+            await _dbContext.Courses.AddAsync(course, cancellationToken);
             return await _dbContext.SaveChangesAsync() > 0;
         }
 

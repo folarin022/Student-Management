@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using StudentManagement.Data;
 
 namespace StudentManagement.Dto.StudentModel
 {

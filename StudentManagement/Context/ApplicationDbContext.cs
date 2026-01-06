@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagement.Data;
-using System.Collections.Generic;
 
 namespace StudentManagement.Context
 {
@@ -15,9 +14,6 @@ namespace StudentManagement.Context
         public DbSet<Course> Courses { get; set; }
         public DbSet<Student> Students { get; set; }
 
-        internal async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

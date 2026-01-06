@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Models;
+using System.Diagnostics;
 
 namespace StudentManagement.Controllers
 {

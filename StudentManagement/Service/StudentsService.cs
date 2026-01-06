@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using StudentManagement.Context;
 using StudentManagement.Data;
 using StudentManagement.Dto;
-using Microsoft.EntityFrameworkCore;
 using StudentManagement.Dto.StudentModel;
 using StudentManagement.Repository.Interface;
 using StudentManagement.Service.Interface;
@@ -13,7 +13,7 @@ namespace StudentManagement.Service
     {
         public async Task<BaseResponse<StudentResponseDto>> AddStudent(AddStudentDto request, CancellationToken cancellationToken)
         {
-            var response= new BaseResponse<StudentResponseDto>();
+            var response = new BaseResponse<StudentResponseDto>();
 
             try
             {
@@ -46,7 +46,7 @@ namespace StudentManagement.Service
                 response.IsSuccess = false;
                 response.Message = ex.Message;
             }
-            return response;    
+            return response;
         }
 
         public async Task<BaseResponse<bool>> DeleteStudent(Guid Id, CancellationToken cancellationToken)
@@ -73,12 +73,12 @@ namespace StudentManagement.Service
                 response.Data = false;
                 response.Message = "Error deleting student";
             }
-            return response; 
+            return response;
         }
 
         public async Task<BaseResponse<List<StudentResponseDto>>> GetAllStudent(CancellationToken cancellationToken)
         {
-            var response= new BaseResponse<List<StudentResponseDto>>();
+            var response = new BaseResponse<List<StudentResponseDto>>();
 
             try
             {
@@ -109,19 +109,45 @@ namespace StudentManagement.Service
             return response;
         }
 
-        public Task<List<SelectListItem>> GetCourseForDropdown()
+        public async Task<List<SelectListItem>> GetCourseForDropdown()
         {
-            throw new NotImplementedException();
+            return await dbContext.Courses
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = d.CourseName
+                })
+                .ToListAsync();
+
         }
 
-        public Task<Student> GetStudentById(Guid Id, CancellationToken cancellationToken)
+        public async Task<Student?> GetStudentById(Guid Id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await dbContext.Students
+                 .Include(e => e.Course)
+                 .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
         }
 
-        public Task<BaseResponse<bool>> UpdateStudent(Guid id, AddStudentDto request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<bool>> UpdateStudent(Guid id, AddStudentDto request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var students = await dbContext.Students.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+
+            if (students == null)
+            {
+                return new BaseResponse<bool> { IsSuccess = false, Message = "Employee not found" };
+            }
+
+            students.FirstName = request.FirstName;
+            students.LastName = request.LastName;
+            students.Gender = request.Gender;
+            students.Email = request.Email;
+            students.PhoneNumber = request.PhoneNumber;
+            students.Address = request.Address;
+            students.CourseId = request.CourseId;
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return new BaseResponse<bool> { IsSuccess = true };
         }
     }
 }

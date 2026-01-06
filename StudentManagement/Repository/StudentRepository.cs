@@ -2,7 +2,6 @@
 using StudentManagement.Context;
 using StudentManagement.Data;
 using StudentManagement.Dto.StudentModel;
-using StudentManagement.Models;
 using StudentManagement.Repository.Interface;
 
 namespace StudentManagement.Repository
@@ -29,7 +28,7 @@ namespace StudentManagement.Repository
             };
 
             await _dbContext.Students.AddAsync(student, cancellationToken);
-             await _dbContext.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             return true;
         }
 
@@ -42,15 +41,15 @@ namespace StudentManagement.Repository
                 return false;
 
             _dbContext.Students.Remove(student);
-             await _dbContext.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             return true;
         }
 
         public async Task<List<Student>> GetAllStudents(CancellationToken cancellationToken)
         {
-            return await _dbContext.Students .ToListAsync(cancellationToken);
-                
-               
+            return await _dbContext.Students.ToListAsync(cancellationToken);
+
+
         }
 
         public async Task<Student?> GetStudentById(Guid id, CancellationToken cancellationToken)

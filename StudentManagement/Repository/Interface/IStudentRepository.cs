@@ -1,6 +1,5 @@
 ﻿using StudentManagement.Data;
 using StudentManagement.Dto.StudentModel;
-using StudentManagement.Models;
 
 namespace StudentManagement.Repository.Interface
 {
