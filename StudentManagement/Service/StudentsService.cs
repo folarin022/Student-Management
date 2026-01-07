@@ -128,7 +128,7 @@ namespace StudentManagement.Service
                  .FirstOrDefaultAsync(e => e.Id == Id, cancellationToken);
         }
 
-        public async Task<BaseResponse<bool>> UpdateStudent(Guid id, AddStudentDto request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<bool>> UpdateStudent(Guid id, EditStudentDto request, CancellationToken cancellationToken)
         {
             var students = await dbContext.Students.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 

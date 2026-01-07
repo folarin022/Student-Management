@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StudentManagement.Context;
+﻿using StudentManagement.Context;
 using StudentManagement.Data;
 using StudentManagement.Dto;
 using StudentManagement.Dto.CourseModel;
-using StudentManagement.Models;
 using StudentManagement.Repository.Interface;
 using StudentManagement.Service.Interface;
 
@@ -142,10 +140,10 @@ namespace StudentManagement.Service
                     return response;
                 }
 
-           
+
                 course.CourseName = request.CourseName;
 
-               await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
                 response.IsSuccess = true;
                 response.Data = true;
