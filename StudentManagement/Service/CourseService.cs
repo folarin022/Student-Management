@@ -9,8 +9,8 @@ namespace StudentManagement.Service
 {
     public class CourseService : ICourseService
     {
-        private readonly ICourseRepository _courseRepository;
-        private readonly ApplicationDbContext _dbContext;
+        private  ICourseRepository _courseRepository;
+        private  ApplicationDbContext _dbContext;
 
         public CourseService(ICourseRepository courseRepository)
         {

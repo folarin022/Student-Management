@@ -1,15 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Dto.CourseModel;
+using StudentManagement.Service;
 using StudentManagement.Service.Interface;
 
 namespace StudentManagement.Controllers
 {
-    public class CourseController(ICourseService courseService) :Controller
+    public class CourseController :Controller
     {
-        [HttpGet]
-        public async Task<IActionResult> FrontPage ()
+
+        private readonly ICourseService _courseService;
+
+        public CourseController(ICourseService courseService)
         {
-            var response = await courseService.GetAllCourses();
+            _courseService = courseService;
+        }
+        [HttpGet]
+        public async Task<IActionResult> FrontPage()
+        {
+            var response = await _courseService.GetAllCourses();
 
             if (!response.IsSuccess || response.Data == null)
             {
@@ -26,7 +34,7 @@ namespace StudentManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create ()
+        public IActionResult Create ()
         {
             return View(new AddCourseDto());
         }
@@ -40,7 +48,7 @@ namespace StudentManagement.Controllers
                 return NotFound();
             }
 
-            var result = await courseService.AddCourse(dto, cancellationToken);
+            var result = await _courseService.AddCourse(dto, cancellationToken);
 
             if (!result.IsSuccess)
             {
@@ -54,7 +62,7 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid Id, CancellationToken cancellationToken)
         {
-            var response = await courseService.GetCourseById(Id, cancellationToken);
+            var response = await _courseService.GetCourseById(Id, cancellationToken);
 
             if(!response.IsSuccess || response.Data == null)
             {
@@ -76,7 +84,7 @@ namespace StudentManagement.Controllers
                 return View(dto);
             }
 
-            var result = await courseService.UpdateCourse(Id, dto, cancellationToken);
+            var result = await _courseService.UpdateCourse(Id, dto, cancellationToken);
 
             if (!result.IsSuccess)
             {
@@ -93,7 +101,7 @@ namespace StudentManagement.Controllers
             if (id == Guid.Empty)
                 return NotFound();
 
-            var response = await courseService.GetCourseById(id, cancellationToken);
+            var response = await _courseService.GetCourseById(id, cancellationToken);
 
             if (!response.IsSuccess || response.Data == null)
                 return NotFound();
@@ -114,8 +122,8 @@ namespace StudentManagement.Controllers
             if (id == Guid.Empty)
                 return BadRequest();
 
-            var result = await courseService.DeleteCourse(id, cancellationToken);
-            return RedirectToAction("FrontPage")
+            var result = await _courseService.DeleteCourse(id, cancellationToken);
+            return RedirectToAction("FrontPage");
         }
 
 
