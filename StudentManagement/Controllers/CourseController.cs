@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Dto.CourseModel;
 using StudentManagement.Service.Interface;
 
@@ -116,7 +115,7 @@ namespace StudentManagement.Controllers
                 return BadRequest();
 
             var result = await courseService.DeleteCourse(id, cancellationToken);
-            return RedirectToAction("FrontPage");
+            return RedirectToAction("FrontPage")
         }
 
 
