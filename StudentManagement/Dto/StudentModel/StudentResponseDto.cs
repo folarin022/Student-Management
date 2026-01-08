@@ -1,4 +1,6 @@
-﻿namespace StudentManagement.Dto.StudentModel
+﻿using StudentManagement.Data;
+
+namespace StudentManagement.Dto.StudentModel
 {
     public class StudentResponseDto
     {

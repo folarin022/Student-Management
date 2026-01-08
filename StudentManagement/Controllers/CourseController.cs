@@ -24,13 +24,14 @@ namespace StudentManagement.Controllers
                 return View(new List<CourseDto>());
             }
 
-            var course = response.Data.Select(d => new CourseDto
+
+            var courseDtos = response.Data.Select(d => new CourseDto
             {
                 Id = d.Id,
                 CourseName = d.CourseName,
-            });
+            }).ToList();
 
-            return View(course);
+            return View(courseDtos); 
         }
 
         [HttpGet]

@@ -32,7 +32,6 @@ namespace StudentManagement.Service
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     Email = request.Email,
-                    DateOfBirth = request.DateOfBirth,
                     Address = request.Address,
                     PhoneNumber = request.PhoneNumber,
                     CourseId = request.CourseId,

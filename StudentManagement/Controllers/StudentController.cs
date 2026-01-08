@@ -1,37 +1,38 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using StudentManagement.Dto;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Dto.StudentModel;
 using StudentManagement.Service.Interface;
-using System.Runtime.InteropServices;
 
 namespace StudentManagement.Controllers
 {
     public class StudentController(IStudentsService studentsService) : Controller
     {
         [HttpGet]
-        public async Task<IActionResult> HomePage (CancellationToken cancellationToken)
+        public async Task<IActionResult> FrontPage(CancellationToken cancellationToken)
         {
             var response = await studentsService.GetAllStudent(cancellationToken);
-            if (response.IsSuccess || response.Data == null)
+
+            if (!response.IsSuccess || response.Data == null)
             {
                 return View(new List<StudentResponseDto>());
             }
 
-            var student = response.Data.Select(d => new StudentResponseDto
+
+            var studentDtos = response.Data.Select(d => new StudentResponseDto
             {
                 Id = d.Id,
                 FirstName = d.FirstName,
                 LastName = d.LastName,
                 Gender = d.Gender,
-                Address = d.Address,
                 Email = d.Email,
                 PhoneNumber = d.PhoneNumber,
+                Address = d.Address,
                 Course = d.Course,
             }).ToList();
 
-            return View(student);
+            return View(studentDtos);
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> AddStudent()
         {
@@ -45,7 +46,7 @@ namespace StudentManagement.Controllers
                 Email = string.Empty,
                 PhoneNumber = string.Empty,
                 CourseId = Guid.Empty,
-                Course = await studentsService.GetCourseForDropdown()
+                Courses = await studentsService.GetCourseForDropdown()
             };
 
             return View(student);  
@@ -57,7 +58,7 @@ namespace StudentManagement.Controllers
         {
             if(!ModelState.IsValid)
             {
-                student.Course = await studentsService.GetCourseForDropdown();
+                student.Courses = await studentsService.GetCourseForDropdown();
 
                 return View(student);
             }
@@ -67,7 +68,7 @@ namespace StudentManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EcitStudent (Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> EditStudent (Guid id, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
             {
