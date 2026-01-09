@@ -2,6 +2,7 @@
 using StudentManagement.Data;
 using StudentManagement.Dto;
 using StudentManagement.Dto.CourseModel;
+using StudentManagement.Models; // Add this
 using StudentManagement.Repository.Interface;
 using StudentManagement.Service.Interface;
 
@@ -9,13 +10,13 @@ namespace StudentManagement.Service
 {
     public class CourseService : ICourseService
     {
-        private  ICourseRepository _courseRepository;
-        private  ApplicationDbContext _dbContext;
+        private readonly ICourseRepository _courseRepository;
+        private readonly ApplicationDbContext _dbContext;
 
-        public CourseService(ICourseRepository courseRepository)
+        public CourseService(ICourseRepository courseRepository, ApplicationDbContext dbContext)
         {
             _courseRepository = courseRepository;
-            _dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<BaseResponse<CourseResponseDto>> AddCourse(AddCourseDto dto, CancellationToken cancellationToken)
@@ -24,14 +25,27 @@ namespace StudentManagement.Service
 
             try
             {
+                if (string.IsNullOrWhiteSpace(dto.CourseName))
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Course name is required";
+                    return response;
+                }
 
                 var course = new Course
                 {
                     Id = Guid.NewGuid(),
-                    CourseName = dto.CourseName,
+                    CourseName = dto.CourseName.Trim(),
                 };
 
-                _dbContext.Courses.Add(course);
+                var isAdded = await _courseRepository.AddCourse(course, cancellationToken);
+
+                if (!isAdded)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Failed to save course to database";
+                    return response;
+                }
 
                 response.IsSuccess = true;
                 response.Data = MapToResponseDto(course);
@@ -81,7 +95,7 @@ namespace StudentManagement.Service
 
             try
             {
-                var courses = await _courseRepository.GetAllCourse();
+                var courses = await _courseRepository.GetAllCourses();
                 var courseDtos = courses.Select(MapToResponseDto).ToList();
 
                 response.IsSuccess = true;
@@ -140,10 +154,17 @@ namespace StudentManagement.Service
                     return response;
                 }
 
-
                 course.CourseName = request.CourseName;
 
-                await _dbContext.SaveChangesAsync();
+                var isUpdated = await _courseRepository.UpdateCourse(course, cancellationToken);
+
+                if (!isUpdated)
+                {
+                    response.IsSuccess = false;
+                    response.Data = false;
+                    response.Message = "Failed to update course";
+                    return response;
+                }
 
                 response.IsSuccess = true;
                 response.Data = true;

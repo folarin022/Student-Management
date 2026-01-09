@@ -8,7 +8,7 @@ namespace StudentManagement.Controllers
     public class StudentController(IStudentsService studentsService) : Controller
     {
         [HttpGet]
-        public async Task<IActionResult> FrontPage(CancellationToken cancellationToken)
+        public async Task<IActionResult> HomePage(CancellationToken cancellationToken)
         {
             var response = await studentsService.GetAllStudent(cancellationToken);
 
@@ -32,40 +32,35 @@ namespace StudentManagement.Controllers
 
             return View(studentDtos);
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> AddStudent()
         {
             var student = new AddStudentDto
-
             {
-                FirstName = string.Empty,
-                LastName = string.Empty,
-                Gender = string.Empty,
-                Address = string.Empty,
-                Email = string.Empty,
-                PhoneNumber = string.Empty,
-                CourseId = Guid.Empty,
                 Courses = await studentsService.GetCourseForDropdown()
             };
 
-            return View(student);  
+            return View(student);
         }
+
+
 
 
         [HttpPost]
-        public async Task<IActionResult> AddStudent(AddStudentDto student,CancellationToken cancellationToken)
+        public async Task<IActionResult> AddStudent(AddStudentDto student, CancellationToken cancellationToken)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 student.Courses = await studentsService.GetCourseForDropdown();
-
                 return View(student);
             }
 
-            await studentsService.AddStudent(student,cancellationToken);
-            return RedirectToAction("HomePage");
+            await studentsService.AddStudent(student, cancellationToken);
+            return RedirectToAction("HomePage" +
+                "");
         }
+
 
         [HttpGet]
         public async Task<IActionResult> EditStudent (Guid id, CancellationToken cancellationToken)

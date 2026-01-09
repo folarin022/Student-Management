@@ -13,6 +13,14 @@ namespace StudentManagement.Dto.StudentModel
         public string Address { get; set; } = string.Empty;
         public Guid CourseId { get; set; } 
 
-        public List<SelectListItem> Courses { get; set; } = new();
+        public List<CourseDropdownDto> Courses { get; set; } = new();
+    }
+
+
+    public class CourseDropdownDto
+
+    {
+        public Guid Id { get; set; }
+        public string CourseName { get; set; }
     }
 }

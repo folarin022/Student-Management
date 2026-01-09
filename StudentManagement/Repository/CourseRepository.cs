@@ -8,16 +8,11 @@ namespace StudentManagement.Repository
 {
     public class CourseRepository(ApplicationDbContext _dbContext) : ICourseRepository
     {
-        public async Task<bool> AddCourse(AddCourseDto request, CancellationToken cancellationToken)
+        public async Task<bool> AddCourse(Course course, CancellationToken cancellationToken)
         {
-            var course = new Course
-            {
-                Id = Guid.NewGuid(),
-                CourseName = request.CourseName,
-            };
-
             await _dbContext.Courses.AddAsync(course, cancellationToken);
-            return await _dbContext.SaveChangesAsync() > 0;
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            return result > 0;
         }
 
         public async Task<bool> DeleteCourse(Guid Id, CancellationToken cancellationToken)
@@ -33,7 +28,7 @@ namespace StudentManagement.Repository
             return true;
         }
 
-        public async Task<List<Course>> GetAllCourse()
+        public async Task<List<Course>> GetAllCourses()
         {
             return await _dbContext.Courses.ToListAsync();
         }
@@ -43,15 +38,21 @@ namespace StudentManagement.Repository
             return await _dbContext.Courses.FirstOrDefaultAsync(p => p.Id == Id, cancellationToken);
         }
 
-        public async Task<bool> UpdateCourse(Guid Id, AddCourseDto request, CancellationToken cancellationToken)
+        public async Task<bool> UpdateCourse(Course course, CancellationToken cancellationToken)
         {
-            var course = await _dbContext.Courses.FindAsync(new object[] { Id }, cancellationToken);
-            if (course == null)
+            var existingCourse = await _dbContext.Courses
+                .FirstOrDefaultAsync(c => c.Id == course.Id, cancellationToken);
+
+            if (existingCourse == null)
                 return false;
 
-            course.CourseName = request.CourseName;
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            return true;
+            existingCourse.CourseName = course.CourseName;
+
+            _dbContext.Courses.Update(existingCourse);
+
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            return result > 0;
         }
+
     }
 }

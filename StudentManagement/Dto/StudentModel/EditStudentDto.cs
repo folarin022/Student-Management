@@ -12,6 +12,8 @@ namespace StudentManagement.Dto.StudentModel
         public string PhoneNumber { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public Guid CourseId { get; set; }
-        public List<SelectListItem> Course { get; set; } = new();
+        public List<CourseDropdownDto> Course { get; set; } = new();
+
+        
     }
 }

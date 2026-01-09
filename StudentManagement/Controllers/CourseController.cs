@@ -46,7 +46,7 @@ namespace StudentManagement.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return NotFound();
+                return View(dto);
             }
 
             var result = await _courseService.AddCourse(dto, cancellationToken);
@@ -78,43 +78,46 @@ namespace StudentManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Guid Id, EditCourseDto dto, CancellationToken cancellationToken)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditCourseDto dto, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
                 return View(dto);
             }
 
-            var result = await _courseService.UpdateCourse(Id, dto, cancellationToken);
+            if (dto.Id == Guid.Empty)
+            {
+                return BadRequest("Invalid course ID");
+            }
+
+            var result = await _courseService.UpdateCourse(dto.Id, dto, cancellationToken);
 
             if (!result.IsSuccess)
             {
-                ModelState.AddModelError("", result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
                 return View(dto);
             }
 
-            return RedirectToAction("FrontPage");
+            return RedirectToAction(nameof(FrontPage));
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id, CancellationToken cancellationToken)
         {
-            if (id == Guid.Empty)
-                return NotFound();
-
             var response = await _courseService.GetCourseById(id, cancellationToken);
-
-            if (!response.IsSuccess || response.Data == null)
-                return NotFound();
 
             var dto = new CourseDto
             {
                 Id = response.Data.Id,
-                CourseName = response.Data.CourseName,
+                CourseName = response.Data.CourseName
             };
 
             return View(dto);
         }
+
 
 
         [HttpPost]

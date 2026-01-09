@@ -1,0 +1,48 @@
+﻿@model StudentManagement.Dto.CourseModel.CourseDto
+
+@{
+    ViewData["Title"] = "Course Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white border-bottom text-center py-3">
+                    <h5 class="mb-0 fw-semibold text-dark">Course Details</h5>
+                    <small class="text-muted">View course information</small>
+                </div>
+
+                <div class="card-body p-4">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Course Name</dt>
+                        <dd class="col-sm-8 fw-medium">@Model.CourseName</dd>
+                    </dl>
+                </div>
+
+                <div class="card-footer bg-white border-top d-flex justify-content-between">
+                    <a asp-action="FrontPage" class="btn btn-outline-secondary">
+                        Back to List
+                    </a>
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-primary">
+                        Edit Course
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 14px;
+    }
+
+    dt {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+</style>

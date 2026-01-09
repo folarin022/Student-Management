@@ -1,5 +1,122 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<StudentManagement.Dto.StudentModel.StudentResponseDto>
+
 @{
+    ViewData["Title"] = "Students";
+}
+
+<div class="container-fluid px-4 mt-4">
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="mb-0 fw-semibold text-dark">Student Management</h5>
+                <small class="text-muted">Overview of all registered students</small>
+            </div>
+            <a asp-action="AddStudent" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>Add Student
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:60px;">#</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Course</th>
+                            <th class="text-center" style="width:180px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            int counter = 1;
+                            foreach (var student in Model)
+                            {
+                                <tr>
+                                    <td class="fw-medium">@counter</td>
+                                    <td>@student.FirstName</td>
+                                    <td>@student.LastName</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">
+                                            @student.Gender
+                                        </span>
+                                    </td>
+                                    <td>@student.Email</td>
+                                    <td>@student.PhoneNumber</td>
+                                    <td>@student.Course</td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-action="StudentDetails"
+                                               asp-route-id="@student.Id"
+                                               class="btn btn-outline-secondary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a asp-action="EditStudent"
+                                               asp-route-id="@student.Id"
+                                               class="btn btn-outline-primary">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form asp-action="DeleteStudent" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="Id" value="@student.Id" />
+                                                <button type="submit"
+                                                        class="btn btn-outline-danger"
+                                                        onclick="return confirm('Delete this student?');">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted">
+                                    No students found
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container-fluid {
+        max-width: 1500px;
+    }
+
+    .card {
+        border-radius: 14px;
+    }
+
+    .table thead th {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fc;
+    }
+
+    .btn-group form {
+        display: inline;
+    }
+</style>
+
+@section Scripts {
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 }

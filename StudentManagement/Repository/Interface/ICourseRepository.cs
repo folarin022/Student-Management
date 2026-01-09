@@ -5,10 +5,10 @@ namespace StudentManagement.Repository.Interface
 {
     public interface ICourseRepository
     {
-        Task<bool> AddCourse(AddCourseDto request, CancellationToken cancellationToken);
-        Task<List<Course>> GetAllCourse();
-        Task<Course> GetCourseById(Guid Id, CancellationToken cancellationToken);
-        Task<bool> UpdateCourse(Guid Id, AddCourseDto request, CancellationToken cancellationToken);
-        Task<bool> DeleteCourse(Guid Id, CancellationToken cancellationToken);
+        Task<bool> AddCourse(Course course, CancellationToken cancellationToken); 
+        Task<bool> DeleteCourse(Guid id, CancellationToken cancellationToken);
+        Task<List<Course>> GetAllCourses(); 
+        Task<Course?> GetCourseById(Guid id, CancellationToken cancellationToken);
+        Task<bool> UpdateCourse(Course course, CancellationToken cancellationToken);
     }
 }

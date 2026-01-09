@@ -108,17 +108,17 @@ namespace StudentManagement.Service
             return response;
         }
 
-        public async Task<List<SelectListItem>> GetCourseForDropdown()
+        public async Task<List<CourseDropdownDto>> GetCourseForDropdown()
         {
-            return await dbContext.Courses
-                .Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = d.CourseName
-                })
-                .ToListAsync();
+            var courses = await dbContext.Courses.ToListAsync();
 
+            return courses.Select(c => new CourseDropdownDto
+            {
+                Id = c.Id,
+                CourseName = c.CourseName
+            }).ToList();
         }
+
 
         public async Task<Student?> GetStudentById(Guid Id, CancellationToken cancellationToken)
         {
