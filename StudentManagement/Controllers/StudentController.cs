@@ -1,5 +1,4 @@
-﻿using StudentManagement.Dto;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Dto.StudentModel;
 using StudentManagement.Service.Interface;
 
@@ -38,6 +37,13 @@ namespace StudentManagement.Controllers
         {
             var student = new AddStudentDto
             {
+                FirstName = string.Empty,
+                LastName = string.Empty,
+                Gender = string.Empty,
+                Email = string.Empty,
+                PhoneNumber = string.Empty,
+                Address = string.Empty,
+                CourseId = Guid.NewGuid(),
                 Courses = await studentsService.GetCourseForDropdown()
             };
 
@@ -57,20 +63,19 @@ namespace StudentManagement.Controllers
             }
 
             await studentsService.AddStudent(student, cancellationToken);
-            return RedirectToAction("HomePage" +
-                "");
+            return RedirectToAction("HomePage");
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> EditStudent (Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> EditStudent(Guid id, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
             {
                 return NotFound();
             }
 
-            var student = await studentsService.GetStudentById(id,cancellationToken);
+            var student = await studentsService.GetStudentById(id, cancellationToken);
 
             if (student == null)
             {
@@ -94,7 +99,7 @@ namespace StudentManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditStudent (EditStudentDto request ,CancellationToken cancellationToken)
+        public async Task<IActionResult> EditStudent(EditStudentDto request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -114,9 +119,9 @@ namespace StudentManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> StudentDetails ( Guid Id ,CancellationToken cancellationToken)
+        public async Task<IActionResult> StudentDetails(Guid Id, CancellationToken cancellationToken)
         {
-            if(Id == Guid.Empty)
+            if (Id == Guid.Empty)
                 return NotFound();
 
 
@@ -142,7 +147,7 @@ namespace StudentManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteStudent(Guid Id,CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteStudent(Guid Id, CancellationToken cancellationToken)
         {
             await studentsService.DeleteStudent(Id, cancellationToken);
             return RedirectToAction("HomePage");
