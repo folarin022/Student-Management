@@ -30,13 +30,14 @@ namespace StudentManagement.Service
                     Id = Guid.NewGuid(),
                     FirstName = request.FirstName,
                     LastName = request.LastName,
+                    Gender = request.Gender,
                     Email = request.Email,
                     Address = request.Address,
                     PhoneNumber = request.PhoneNumber,
                     CourseId = request.CourseId,
                 };
 
-                dbContext.Students.Add(student);
+                await dbContext.Students.AddAsync(student);
                 await dbContext.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
@@ -74,38 +75,27 @@ namespace StudentManagement.Service
             return response;
         }
 
-        public async Task<BaseResponse<List<StudentResponseDto>>> GetAllStudent(CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<StudentResponseDto>>> GetAllStudent(
+       CancellationToken cancellationToken)
         {
-            var response = new BaseResponse<List<StudentResponseDto>>();
-
-            try
-            {
-                var student = await dbContext.Students
-                    .Include(e => e.Course)
-                    .ToListAsync(cancellationToken);
-
-                var list = student.Select(e => new StudentResponseDto
+            var students = await dbContext.Students
+                .Include(s => s.Course)
+                .Select(s => new StudentResponseDto
                 {
-                    Id = e.Id,
-                    FirstName = e.FirstName,
-                    LastName = e.LastName,
-                    Gender = e.Gender,
-                    Email = e.Email,
-                    Address = e.Address,
-                    PhoneNumber = e.PhoneNumber,
-                    CourseId = e.CourseId,
-                    Course = e.Course.CourseName,
-                }).ToList();
-            }
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    Gender = s.Gender,
+                    Email = s.Email,
+                    PhoneNumber = s.PhoneNumber,
+                    Address = s.Address,
+                    Course = s.Course.CourseName
+                })
+                .ToListAsync(cancellationToken);
 
-            catch (Exception e)
-            {
-                response.IsSuccess = false;
-                response.Data = null;
-                response.Message = "Error fetching student";
-            }
-            return response;
+            return BaseResponse<List<StudentResponseDto>>.SuccessResponse(students);
         }
+
 
         public async Task<List<CourseDropdownDto>> GetCourseForDropdown()
         {

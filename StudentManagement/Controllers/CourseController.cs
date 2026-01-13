@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Dto.CourseModel;
 using StudentManagement.Service;
 using StudentManagement.Service.Interface;
@@ -40,7 +41,7 @@ namespace StudentManagement.Controllers
             return View(new AddCourseDto());
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create (AddCourseDto dto,CancellationToken cancellationToken)
         {
@@ -76,7 +77,7 @@ namespace StudentManagement.Controllers
              };
             return View(model);
         }
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditCourseDto dto, CancellationToken cancellationToken)

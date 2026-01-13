@@ -21,13 +21,10 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:60px;">#</th>
+                            <th style="width:60px;">S/N</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Gender</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Course</th>
                             <th class="text-center" style="width:180px;">Actions</th>
                         </tr>
                     </thead>
@@ -37,18 +34,17 @@
                             int counter = 1;
                             foreach (var student in Model)
                             {
-                                <tr>
+                                <tr class="employee-row" data-gender="@student.Gender?.ToLower()" data-name="@student.FirstName?.ToLower() @student.LastName?.ToLower()  @student.Gender?.ToLower()">
                                     <td class="fw-medium">@counter</td>
+                                    
                                     <td>@student.FirstName</td>
                                     <td>@student.LastName</td>
                                     <td>
-                                        <span class="badge bg-light text-dark border">
-                                            @student.Gender
+                                        <span class="badge @GetGenderBadgeClass(student.Gender) rounded-pill px-3 py-2">
+                                          @student.Gender
                                         </span>
-                                    </td>
-                                    <td>@student.Email</td>
-                                    <td>@student.PhoneNumber</td>
-                                    <td>@student.Course</td>
+                                    </td>  
+    
                                     <td class="text-center">
                                         <div class="btn-group btn-group-sm">
                                             <a asp-action="StudentDetails"
@@ -56,12 +52,14 @@
                                                class="btn btn-outline-secondary">
                                                 <i class="bi bi-eye"></i>
                                             </a>
+
                                             <a asp-action="EditStudent"
                                                asp-route-id="@student.Id"
                                                class="btn btn-outline-primary">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form asp-action="DeleteStudent" method="post">
+
+                                            <form asp-action="DeleteStudent" method="post" class="d-inline">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="Id" value="@student.Id" />
                                                 <button type="submit"
@@ -85,6 +83,7 @@
                             </tr>
                         }
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -115,6 +114,28 @@
         display: inline;
     }
 </style>
+
+@functions {
+    private string GetGenderColor(string gender)
+    {
+        return gender?.ToLower() switch
+        {
+            "male" => "bg-info bg-opacity-10 text-info",
+            "female" => "bg-warning bg-opacity-10 text-warning",
+            _ => "bg-secondary bg-opacity-10 text-secondary"
+        };
+    }
+
+    private string GetGenderBadgeClass(string gender)
+    {
+        return gender?.ToLower() switch
+        {
+            "male" => "bg-info bg-opacity-10 text-info",
+            "female" => "bg-warning bg-opacity-10 text-warning",
+            _ => "bg-secondary bg-opacity-10 text-secondary"
+        };
+    }
+}
 
 @section Scripts {
     <link rel="stylesheet"

@@ -35,7 +35,6 @@
                                 <option value="">-- Select Gender --</option>
                                 <option value="Male" selected="@(Model.Gender == "Male" ? "selected" : null)">Male</option>
                                 <option value="Female" selected="@(Model.Gender == "Female" ? "selected" : null)">Female</option>
-                                <option value="Other" selected="@(Model.Gender == "Other" ? "selected" : null)">Other</option>
                             </select>
 
                             <span asp-validation-for="Gender" class="text-danger small"></span>
@@ -68,7 +67,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">
-                            <a asp-action="FrontPage" class="btn btn-outline-secondary btn-lg">
+                            <a asp-action="HomePage" class="btn btn-outline-secondary btn-lg">
                                 <i class="bi bi-arrow-left me-1"></i>Back
                             </a>
                             <button type="submit" class="btn btn-gradient btn-lg text-white">

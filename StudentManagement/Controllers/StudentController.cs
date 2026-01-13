@@ -37,18 +37,12 @@ namespace StudentManagement.Controllers
         {
             var student = new AddStudentDto
             {
-                FirstName = string.Empty,
-                LastName = string.Empty,
-                Gender = string.Empty,
-                Email = string.Empty,
-                PhoneNumber = string.Empty,
-                Address = string.Empty,
-                CourseId = Guid.NewGuid(),
                 Courses = await studentsService.GetCourseForDropdown()
             };
 
             return View(student);
         }
+
 
 
 

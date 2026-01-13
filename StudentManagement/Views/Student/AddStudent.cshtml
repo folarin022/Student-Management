@@ -16,74 +16,55 @@
                     <form asp-action="AddStudent" method="post">
                         @Html.AntiForgeryToken()
 
-                        
                         <div class="mb-3">
-                            <label asp-for="FirstName" class="form-label fw-semibold"></label>
-                            <input asp-for="FirstName" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            <label asp-for="FirstName"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="LastName" class="form-label fw-semibold"></label>
-                            <input asp-for="LastName" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                            <label asp-for="LastName"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Gender" class="form-label fw-semibold"></label>
                             <select asp-for="Gender" class="form-select form-select-lg shadow-sm">
                                 <option value="">-- Select Gender --</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
+                                <option value="Male" selected="@(Model.Gender == "Male" ? "selected" : null)">Male</option>
+                                <option value="Female" selected="@(Model.Gender == "Female" ? "selected" : null)">Female</option>
                             </select>
+
                             <span asp-validation-for="Gender" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label fw-semibold"></label>
-                            <input asp-for="Email" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="Email" class="text-danger small"></span>
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" />
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
-                            <input asp-for="PhoneNumber" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                            <label asp-for="PhoneNumber"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Address" class="form-label fw-semibold"></label>
-                            <input type="Address" class="form-control form-control-lg shadow-sm"  />
-                            <span asp-validation-for="Address" class="text-danger small"></span>
+                            <label asp-for="Address"></label>
+                            <input asp-for="Address" class="form-control" />
                         </div>
 
-                        @if (Model.Courses != null && Model.Courses.Any())
-                        {
+                        <div class="mb-3">
+                            <label asp-for="CourseId"></label>
                             <select asp-for="CourseId"
                                     class="form-select"
                                     asp-items="@(new SelectList(Model.Courses, "Id", "CourseName"))">
                                 <option value="">-- Select Course --</option>
                             </select>
-                        }
-                        else
-                        {
-                            <select class="form-select" disabled>
-                                <option>No courses available</option>
-                            </select>
-                        }
-
-
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            
-                            <button type="submit" class="btn btn-gradient btn-lg text-white">
-                                <i class="bi bi-check-circle me-1"></i>Add Student
-                            </button>
-
-                            <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill shadow-sm hover-lift" href="@Url.Action("HomePage", "Student")">
-                                <i class="bi bi-arrow-left me-2"></i> Back to List
-                            </a>
+                            <span asp-validation-for="CourseId" class="text-danger"></span>
                         </div>
+
+                        <button type="submit" class="btn btn-primary">Add Student</button>
                     </form>
                 </div>
             </div>

@@ -11,6 +11,7 @@
         public string Address { get; set; } = string.Empty;
         public Guid CourseId { get; set; }
         public Course Course { get; set; }
+        public ApplicationUser User { get; set; }
     }
     public class StudentViewModel
     {
