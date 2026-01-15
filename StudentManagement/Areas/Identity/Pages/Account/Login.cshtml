@@ -231,7 +231,7 @@
                        id="email"
                        placeholder="Enter your email"
                        required>
-                <span asp-validation-for="Input.Email" class="validation-error"></span>
+                @* <span asp-validation-for="Input.Email" class="validation-error"></span> *@
             </div>
 
             <!-- Password Input -->
@@ -241,7 +241,7 @@
                 </label>
                 <div class="password-container">
                     <input asp-for="Input.Password"
-                           type="password"
+                           type="password" 
                            id="password"
                            placeholder="Enter your password"
                            required>
@@ -260,7 +260,8 @@
 
             <!-- Login Button -->
             <button type="submit" class="login-button">
-                <i class="fas fa-sign-in-alt"></i> Sign In
+                <i class="fas fa-sign-in-alt" ></i> Sign in
+               <a href="FrontPage"></a>
             </button>
 
             <!-- Divider -->

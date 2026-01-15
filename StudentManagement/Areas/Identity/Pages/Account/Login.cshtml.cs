@@ -11,7 +11,7 @@ namespace StudentManagement.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-
+        private readonly UserManager<ApplicationUser> _userManager;
         public LoginModel(SignInManager<ApplicationUser> signInManager)
         {
             _signInManager = signInManager;
@@ -29,7 +29,7 @@ namespace StudentManagement.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            [DataType(DataType.Password)]
+            //[DataType(DataType.Password)]
             public string Password { get; set; }
 
             public bool RememberMe { get; set; }
