@@ -14,6 +14,7 @@ namespace StudentManagement.Context
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<Auth> Auths { get; set; }
 
 
     }

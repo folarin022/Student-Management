@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudentManagement.Context;
 using StudentManagement.Data;
-using StudentManagement.Models;
 using StudentManagement.Repository;
 using StudentManagement.Repository.Interface;
 using StudentManagement.Service;
@@ -51,7 +49,6 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.EnsureCreated();
-    Console.WriteLine("Database initialized");
 }
 
 // Configure pipeline
@@ -75,6 +72,6 @@ app.MapRazorPages();
 // Map Controller routes
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=StudentLogin}/{action=Login}/{id?}");
 
 app.Run();

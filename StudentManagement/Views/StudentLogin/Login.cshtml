@@ -1,6 +1,6 @@
-﻿@page
-@model LoginModel
-
+﻿
+@using StudentManagement.Dto.StudentModel
+@model StudentLoginDto
 @{
     Layout = null;
     ViewData["Title"] = "Login";
@@ -184,17 +184,14 @@
 
         /* Simple responsive design */
         @@media (max-width: 480px) {
-            .login-box
+            .login-box {
+                padding: 30px 20px;
+                margin: 0 10px;
+            }
 
-        {
-            padding: 30px 20px;
-            margin: 0 10px;
-        }
-
-        body {
-            padding: 10px;
-        }
-
+            body {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -217,7 +214,7 @@
         }
 
         <!-- Login Form -->
-        <form method="post">
+        <form asp-action="Login" method="post">
             <!-- Hide the default validation summary but keep for model errors -->
             <div asp-validation-summary="ModelOnly" class="d-none"></div>
 
@@ -226,7 +223,7 @@
                 <label for="email">
                     <i class="fas fa-envelope"></i> Email Address
                 </label>
-                <input asp-for="Input.Email"
+                <input asp-for="EmailAddress"
                        type="email"
                        id="email"
                        placeholder="Enter your email"
@@ -240,8 +237,8 @@
                     <i class="fas fa-lock"></i> Password
                 </label>
                 <div class="password-container">
-                    <input asp-for="Input.Password"
-                           type="password" 
+                    <input asp-for="password"
+                           type="password"
                            id="password"
                            placeholder="Enter your password"
                            required>
@@ -249,19 +246,18 @@
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <span asp-validation-for="Input.Password" class="validation-error"></span>
+                <span asp-validation-for="password" class="validation-error"></span>
             </div>
 
             <!-- Remember Me -->
             <div class="remember-me">
-                <input asp-for="Input.RememberMe" type="checkbox" id="remember">
+                <input asp-for="RememberMe" type="checkbox" id="remember">
                 <label for="remember">Remember me</label>
             </div>
 
             <!-- Login Button -->
             <button type="submit" class="login-button">
-                <i class="fas fa-sign-in-alt" ></i> Sign in
-               <a href="FrontPage"></a>
+                <i class="fas fa-sign-in-alt"></i> Sign in
             </button>
 
             <!-- Divider -->
