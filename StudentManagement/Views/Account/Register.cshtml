@@ -1,10 +1,10 @@
-﻿@page
-@model RegisterModel
-
+﻿@using StudentManagement.Dto.StudentModel
+@model StudentRegisterDto
 @{
     Layout = null;
     ViewData["Title"] = "Register";
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +15,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Same styles as login page for consistency */
         body {
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
@@ -98,6 +99,12 @@
             cursor: pointer;
         }
 
+        .name-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
         .error-message {
             background: #f8d7da;
             color: #721c24;
@@ -105,6 +112,16 @@
             border-radius: 6px;
             margin-bottom: 20px;
             border: 1px solid #f5c6cb;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #badbcc;
             font-size: 14px;
         }
 
@@ -191,10 +208,16 @@
             text-align: center;
         }
 
+        /* Responsive design */
         @@media (max-width: 576px) {
             .register-box {
                 padding: 30px 20px;
                 margin: 0 10px;
+            }
+
+            .name-group {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
 
             body {
@@ -218,92 +241,159 @@
             <div class="error-message">
                 <i class="fas fa-exclamation-circle"></i>
                 Please correct the errors below
-                <ul style="margin: 5px 0; padding-left: 20px;">
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                </ul>
+            </div>
+        }
+
+        <!-- Success Message (if redirected from successful registration) -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="success-message">
+                <i class="fas fa-check-circle"></i>
+                @TempData["SuccessMessage"]
             </div>
         }
 
         <!-- Registration Form -->
         <form method="post">
-            @Html.AntiForgeryToken()
+            <!-- Hide default validation summary -->
+            <div asp-validation-summary="ModelOnly" class="d-none"></div>
+
+            <!-- Name Fields -->
+
+            <!-- FirstName -->
+            <div class="input-group">
+                <label for="FirstName">
+                    <i class="fas fa-envelope"></i> FirstName
+                </label>
+                <input asp-for="FirstName"
+                       type="text"
+                       id="email"
+                       placeholder="Enter your firstName"
+                       required>
+                <span asp-validation-for="FirstName" class="validation-error"></span>
+            </div>
+
+            <!-- LastName -->
+            <div class="input-group">
+                <label for="LastName">
+                    <i class="fas fa-envelope"></i> LastName
+                </label>
+                <input asp-for="LastName"
+                       type="text"
+                       id="email"
+                       placeholder="Enter your LastName"
+                       required>
+                <span asp-validation-for="LastName" class="validation-error"></span>
+            </div>
+
+
+            <div class="input-group">
+                <label for="gender">
+                    <i class="fas fa-user"></i> Gender
+                </label>
+                <select asp-for="Gender" class="form-select form-select-lg shadow-sm floating-select" id="genderSelect">
+                    <option value="">----Select Gender----</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                <span asp-validation-for="Gender" class="validation-error"></span>
+                
+            </div>
+
+            <!-- PhoneNumber -->
+            <div class="input-group">
+                <label for="PhoneNumber">
+                    <i class="fas fa-envelope"></i> PhoneNumber
+                </label>
+                <input asp-for="PhoneNumber"
+                       type="tel"
+                       id="email"
+                       placeholder="Enter your PhoneNumber"
+                       required>
+                <span asp-validation-for="PhoneNumber" class="validation-error"></span>
+            </div>
 
             <!-- Email -->
             <div class="input-group">
-                <label for="Input_Email">
+                <label for="email">
                     <i class="fas fa-envelope"></i> Email Address
                 </label>
-                <input asp-for="Input.Email"
-                       type="email"
-                       id="Input_Email"
-                       name="Input.Email"
+                <input asp-for="Email" 
+                       type="email" 
+                       id="email"
                        placeholder="student@example.com"
                        required>
-                <span asp-validation-for="Input.Email" class="validation-error"></span>
+                <span asp-validation-for="Email" class="validation-error"></span>
             </div>
 
             <!-- Password -->
             <div class="input-group">
-                <label for="Input_Password">
+                <label for="password">
                     <i class="fas fa-lock"></i> Password
                 </label>
                 <div class="password-container">
-                    <input asp-for="Input.Password"
-                           type="password"
-                           id="Input_Password"
-                           name="Input.Password" 
-                           placeholder="Create a password" />
-                          
-                           req> 
-                    <button type="button" class="password-toggle" onclick="togglePassword('Input_Password')">
+                    <input asp-for="Password" 
+                           type="password" 
+                           id="password"
+                           placeholder="Create a password"
+                           required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <span asp-validation-for="Input.Password" class="validation-error"></span>
-
-         
+                <span asp-validation-for="Password" class="validation-error"></span>
+                
+                <!-- Password Rules -->
+                <div class="password-rules">
+                    <strong>Password must contain:</strong>
+                    <ul>
+                        <li>At least 6 characters</li>
+                        <li>At least one uppercase letter</li>
+                        <li>At least one number</li>
+                    </ul>
+                </div>
+            </div>
 
             <!-- Confirm Password -->
             <div class="input-group">
-                <label for="Input_ConfirmPassword">
+                <label for="confirmPassword">
                     <i class="fas fa-lock"></i> Confirm Password
                 </label>
                 <div class="password-container">
-                    <input asp-for="Input.ConfirmPassword"
-                           type="password"
-                           id="Input_ConfirmPassword"
-                           name="Input.ConfirmPassword"
+                    <input asp-for="ConfirmPassword" 
+                           type="password" 
+                           id="confirmPassword"
                            placeholder="Re-enter your password"
                            required>
-                    <button type="button" class="password-toggle" onclick="togglePassword('Input_ConfirmPassword')">
+                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <span asp-validation-for="Input.ConfirmPassword" class="validation-error"></span>
+                <span asp-validation-for="ConfirmPassword" class="validation-error"></span>
             </div>
 
             <!-- Terms and Conditions -->
             <div class="terms-checkbox">
                 <input type="checkbox" id="terms" name="terms" required>
                 <label for="terms">
-                    I agree to the <a href="#" style="color: #0d6efd;">Terms of Service</a> and
+                    I agree to the <a href="#" style="color: #0d6efd;">Terms of Service</a> and 
                     <a href="#" style="color: #0d6efd;">Privacy Policy</a>
                 </label>
             </div>
 
             <!-- Register Button -->
             <button type="submit" class="register-button">
-                <i class="fas fa-user-plus"></i> Create Account
+                <i class="fas fa-user-plus"></i> Create Account  <a href="@Url.Action("Index", "Home")"></a>
             </button>
         </form>
 
         <!-- Login Link -->
         <div class="login-link">
             Already have an account?
-            <a asp-page="./Login">Sign in here</a>
+            <div class="links">
+
+                <a href="@Url.Action("Login", "Account")">Sign in here</a>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -317,24 +407,73 @@
         function togglePassword(inputId) {
             const passwordInput = document.getElementById(inputId);
             const eyeIcon = passwordInput.nextElementSibling.querySelector('i');
-
+            
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
                 eyeIcon.classList.remove('fa-eye-slash');
                 eyeIcon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
             }
         }
 
-        // REMOVE the client-side validation that was blocking form submission
-        // Let ASP.NET Core handle the validation instead
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function(e) {
+            const password = e.target.value;
+            const rules = document.querySelector('.password-rules li');
+            
+            // Simple validation feedback
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasMinLength = password.length >= 6;
+            
+            // You can add visual feedback here if needed
+            if (hasUpperCase && hasNumber && hasMinLength) {
+                e.target.style.borderColor = '#28a745';
+            } else {
+                e.target.style.borderColor = '#ddd';
+            }
+        });
 
-        // Focus on email input when page loads
+        // Confirm password match
+        document.getElementById('confirmPassword').addEventListener('input', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = e.target.value;
+            
+            if (confirmPassword && password !== confirmPassword) {
+                e.target.style.borderColor = '#dc3545';
+            } else if (confirmPassword) {
+                e.target.style.borderColor = '#28a745';
+            } else {
+                e.target.style.borderColor = '#ddd';
+            }
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+            
+            let errors = [];
+            
+            if (!email) errors.push('Email is required');
+            if (!password) errors.push('Password is required');
+            if (password !== confirmPassword) errors.push('Passwords do not match');
+            if (!terms) errors.push('You must agree to the terms and conditions');
+            
+            if (errors.length > 0) {
+                e.preventDefault();
+                alert('Please fix the following errors:\n\n' + errors.join('\n'));
+            }
+        });
+
+        // Focus on first name input when page loads
         window.onload = function() {
-            document.getElementById('Input_Email').focus();
+            document.getElementById('firstName').focus();
         };
     </script>
 </body>

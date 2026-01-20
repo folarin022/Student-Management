@@ -3,15 +3,31 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StudentManagement.Dto.StudentModel
 {
-    public class RegisterStudentDto
+    public class StudentRegisterDto
     {
         [Required]
-        public string FirstName{ get; set; }
-        public string LastName{ get; set; }
-        public string Gender{ get; set; }
-        public string EmailAddress{ get; set; }
-        public string PhoneNumber{ get; set; }
-        public string Password{ get; set; }
+        public string FirstName { get; set; }
 
+        [Required]
+        public string LastName { get; set; }
+
+        [Required]
+        public string Gender { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]  
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password")]
+        public string ConfirmPassword { get; set; }
     }
+
 }

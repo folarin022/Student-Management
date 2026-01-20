@@ -13,7 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 🔥 CRITICAL: Use AddDefaultIdentity for Razor Pages Identity UI
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+builder.Services.AddDefaultIdentity<ApplicationUser >(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = false;
@@ -25,6 +25,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add services
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(); // This is required for Identity pages
 
@@ -41,6 +42,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.LogoutPath = "/Identity/Account/Logout";
 });
+
+
 
 var app = builder.Build();
 
@@ -66,12 +69,14 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 // 🔥 Map Razor Pages BEFORE Controller routes
 app.MapRazorPages();
 
 // Map Controller routes
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=StudentLogin}/{action=Login}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+
 
 app.Run();

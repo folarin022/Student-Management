@@ -32,6 +32,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="HomePage">Student</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-link text-decoration-none">
+                                    Logout
+                                </button>
+                            </form>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -42,6 +52,30 @@
             @RenderBody()
         </main>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
