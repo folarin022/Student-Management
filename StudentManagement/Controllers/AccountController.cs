@@ -50,14 +50,14 @@ namespace StudentManagement.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    EmailAddress = model.Email,
+                    Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Gender = model.Gender,
                     PhoneNumber = model.PhoneNumber,
                     Password= model.Password
                 };
-
+                
                await _dbContext.ApplicationUsers.AddAsync(user);
 
                 //foreach (var error in result.Errors)
@@ -156,7 +156,7 @@ namespace StudentManagement.Controllers
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.EmailAddress,
+                Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Gender = user.Gender
             };

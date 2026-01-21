@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Dto.StudentModel;
 using StudentManagement.Service.Interface;
 
@@ -7,7 +6,6 @@ namespace StudentManagement.Controllers
 {
     public class StudentController(IStudentsService studentsService) : Controller
     {
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> HomePage(CancellationToken cancellationToken)
         {
